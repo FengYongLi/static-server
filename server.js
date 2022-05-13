@@ -20,11 +20,16 @@ var server = http.createServer(function(request, response){
   /******** 从这里开始看，上面不要看 ************/
   console.log('有个傻子发请求过来啦！路径（带查询参数）为：' + pathWithQuery)
 
-  // 抽出共同部分 解决重复
   response.statusCode = 200
   response.setHeader('Content-Type', 'text/html;charset=utf-8')
-  // 使用 `` 字符串插入路径 根据路径不同现实不同网页
-  response.write(fs.readFileSync(`./public/${path}`))
+  let content
+  try{
+    content = fs.readFileSync(`./public${path}`)
+  }catch(error){
+    content = "文件不存在"
+    response.statusCode = 404
+  }
+  response.write(content)
   response.end()
 
   /******** 代码结束，下面不要看 ************/
